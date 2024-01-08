@@ -3,10 +3,20 @@ const container = document.createElement("div");
 container.classList.add("container");
 
 let colorPicker = document.getElementById("colorPicker");
-colorPicker.value = "#ff5050";
-let selectedColor = "#ff5050";
+colorPicker.value = "#000";
+let selectedColor = "#000";
 
-let sqPerSide = prompt("Enter the squares per side");
+const slider = document.querySelector("#range");
+
+let sqPerSide = 33;
+let squareWidth = 100 / sqPerSide + "%";
+
+window.onload = () => {
+  updateGrid(sqPerSide);
+  container.style["border"] = "10px solid black";
+  container.style["border-radius"] = "10px";
+  body.appendChild(container);
+};
 
 colorPicker.addEventListener("input", (e) => {
   selectedColor = e.target.value;
@@ -21,18 +31,32 @@ container.addEventListener("mouseup", () => {
   isClicking = false;
 });
 
-for (let i = 1; i <= 256; i++) {
-  const square = document.createElement("div");
-  square.classList.add("square");
-  square.addEventListener("mouseover", () => {
-    if (isClicking) {
-      square.style.backgroundColor = selectedColor;
-    }
-  });
-  container.appendChild(square);
+sliderText = document.querySelector(".sliderText");
+sliderText.innerHTML = sqPerSide + " X " + sqPerSide;
+
+slider.oninput = function () {
+  sqPerSide = slider.value;
+  updateGrid(sqPerSide);
+};
+function updateGrid(sqPerSide) {
+  container.innerHTML = "";
+  squareWidth = 100 / sqPerSide + "%";
+  sliderText.innerHTML = sqPerSide + " X " + sqPerSide;
+  for (let i = 1; i <= sqPerSide * sqPerSide; i++) {
+    const square = document.createElement("div");
+    square.classList.add("square");
+    square.style["width"] = squareWidth;
+    square.style["height"] = squareWidth;
+    square.addEventListener("mouseover", () => {
+      if (isClicking) {
+        square.style.backgroundColor = selectedColor;
+      }
+    });
+    container.appendChild(square);
+  }
 }
-container.style["border"] = "20px solid rgb(222, 80, 80)";
-container.style["border-radius"] = "20px";
+container.style["border"] = "10px solid black";
+container.style["border-radius"] = "10px";
 body.appendChild(container);
 
 let clearButton = document.querySelector(".clear");
